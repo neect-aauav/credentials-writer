@@ -26,7 +26,7 @@ The **plugin.py** file must have the code and the logic of what you want to writ
 
 The plugin file must have the function `run()`, which will be called by the program. This function is called with 3 arguments:
 - `instanciator`: function that creates a new instance of a credential
-- `file`: the file of the names of the tier
+- `file`: the file with the list of names from a tier
 - `tier`: the tier of the credential
 
 Each text to be written need styling, so you have to create dicts with the styles you want to use. The dicts should have the following structure:
@@ -43,9 +43,9 @@ Each text to be written need styling, so you have to create dicts with the style
 }
 ```
 
-⚠️ The path context inside the plugin file is the root of the plugin folder.  
+⚠️ The path context inside the plugin file is the root of the project. For example, to reference the fonts folder, you would user `plugins/<plugin>/fonts/...  
 
-An example of a plugin file can be following, with the only requirement being the `run()` function:
+An example of a plugin file can be the following, with the only requirement being the `run()` function:
 
 ```python
 # definition of the styles
