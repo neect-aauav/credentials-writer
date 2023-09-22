@@ -4,14 +4,13 @@ import credentials
 
 def load_plugin(plugin_name):
 	# check if plugin exists
-	if not os.path.exists("plugins/"+plugin_name+".py"):
+	if not os.path.exists(f"plugins/{plugin_name}/plugin.py"):
 		print(f"Plugin '{plugin_name}' not found.\n")
-		showHelp(sys.argv[0])
 		return
 
 	# import plugin
 	import importlib.util
-	spec = importlib.util.spec_from_file_location(plugin_name, "plugins/"+plugin_name+".py")
+	spec = importlib.util.spec_from_file_location(plugin_name, f"plugins/{plugin_name}/plugin.py")
 	plugin = importlib.util.module_from_spec(spec)
 	spec.loader.exec_module(plugin)
 
@@ -31,32 +30,35 @@ def main():
 		showHelp(sys.argv[0])	
 		return
 
-	# handle arguments
 	if len(args) > 0:
 		plugin_name = args[0]
+		plugin = load_plugin(plugin_name)
+		if not plugin:
+			showHelp(sys.argv[0])
+			return
+
 		type = args[1]
-		file = "names/"+type+".txt"
+		file = f"plugins/{plugin_name}/names/{type}.txt"
 		if len(args) == 3:
 			file = args[2]
-		
-	print(f"Generating credentials for '{type}' from file '{file}'...")
+			
+		if not os.path.exists(file):
+			print(f"File '{file}' not found.\n")
+			showHelp(sys.argv[0])
+			return
 
-	if not os.path.exists(file):
-		print(f"File '{file}' not found.\n")
-		showHelp(sys.argv[0])
-		return
+		print(f"Generating credentials for '{type}' from file '{file}'...")
 
-	# run plugin
-	plugin = load_plugin(plugin_name)
-	n_gen = plugin.run(
-		lambda: credentials.Credential(f"templates/enei/{type}.png"),
-		file,
-		type
-	)
+		# run plugin
+		n_gen = plugin.run(
+			lambda: credentials.Credential(f"plugins/{plugin_name}/templates/{type}.png"),
+			file,
+			type
+		)
 
-	# if n_gen exists, print how many credentials were generated
-	if n_gen:
-		print(f"Generated {n_gen} credentials.")
+		# if n_gen exists, print how many credentials were generated
+		if n_gen:
+			print(f"Generated {n_gen} credentials.")
 
 if __name__ == "__main__":
 	main()

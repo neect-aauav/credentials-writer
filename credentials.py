@@ -7,21 +7,21 @@ class Credential:
 			print("No template specified.")
 			return
 		
-		self.image = self.openImage(template)
+		self.image = self.open(template)
 		self.draw = ImageDraw.Draw(self.image)
 
 
-	def imageSize(self):
+	def size(self):
 		return self.image.size
 
-	def openImage(self, path):
+	def open(self, path):
 		if not os.path.exists(path):
 			print(f"Image '{path}' not found.")
 			return
 
 		return Image.open(path)
 
-	def saveImage(self, path):
+	def save(self, path):
 		if not os.path.exists(os.path.dirname(path)):
 			os.makedirs(os.path.dirname(path))
 
@@ -42,7 +42,7 @@ class Credential:
 		font = ImageFont.truetype(style["font"], style["font_size"])
 
 		# Create a shadow text image with RGBA mode
-		shadow_text_image = Image.new("RGBA", self.image.size, (0, 0, 0, 0))  # Transparent black
+		shadow_text_image = Image.new("RGBA", self.size(), (0, 0, 0, 0))  # Transparent black
 		shadow_text_draw = ImageDraw.Draw(shadow_text_image)
 		shadow_text_draw.text(position, text, fill=(0, 0, 0, style["shadow"]["opacity"]), font=font)
 
@@ -52,8 +52,8 @@ class Credential:
 		# Paste the shadow text onto the original image using alpha mask
 		self.image.paste(shadow_text_image, (0, 0), shadow_text_image)
 
-	def writeCredential(self, text, style):
-		W, H = self.imageSize()
+	def write(self, text, style):
+		W, H = self.size()
 		font = ImageFont.truetype(style["font"], style["font_size"])
 
 		text_length = self.draw.textlength(text, font=font)
