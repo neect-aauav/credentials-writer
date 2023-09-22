@@ -33,12 +33,12 @@ Each text to be written need styling, so you have to create dicts with the style
 
 ```python
 {
-	'font_size': 105, 					# size of the font in pixels
+	'font_size': 105, 			# size of the font in pixels
 	'font': "plugins/enei/fonts/...", 	# path to the font
-	'color': "#f9a31c", 				# color of the text in hex
-	'upper_offset': 875, 				# offset from the top of the image in pixels
-	'shadow': { 						# include if you want a shadow
-		'opacity': 190 					# opacity of the shadow
+	'color': "#f9a31c", 			# color of the text in hex
+	'upper_offset': 875, 			# offset from the top of the image in pixels
+	'shadow': { 				# include if you want a shadow
+		'opacity': 190 			# opacity of the shadow
 	}
 }
 ```
@@ -78,6 +78,17 @@ def run(new, file, tier):
 	# return the number of credentials generated if you want it to be displayed
 	return ...
 ```
+
+## Credential class
+
+The program provides a `Credential` class, which is a wrapper of several Pillow functions that are convenient to this use case.  
+An instance of this class is created with the `instanciator` function, which is passed as an argument to the `run()` function inside the plugin file (function `new()` in the example above).  
+The `Credential` class has the following class methods that you can use:
+- `save(path)`: saves the credential image to the path.
+- `shadow(text, position, style)`: writes te text as a shadow. The position is a tuple with the x and y coordinates of the text.
+- `size()`: returns a typle with the width and height of the credential image.
+- `textLength(text, style)`: returns the length of the text in pixels.
+- `write(text, style)`: writes the text with the style provided. The position of the text is calculated automatically to be centered. If style has shadow, it will be written with a shadow.
 
 ## Usage
 

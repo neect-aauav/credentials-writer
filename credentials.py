@@ -27,18 +27,11 @@ class Credential:
 
 		self.image.save(path)
 
-	def saveImages(self, images, path):
-		if not os.path.exists(os.path.dirname(path)):
-			os.makedirs(os.path.dirname(path))
-
-		for image in images:
-			self.image.save(path+"/"+image)
-
 	def textLength(self, text, style):
 		font = ImageFont.truetype(style["font"], style["font_size"])
 		return self.draw.textlength(text, font=font)
 
-	def setShadow(self, text, position, style):
+	def shadow(self, text, position, style):
 		font = ImageFont.truetype(style["font"], style["font_size"])
 
 		# Create a shadow text image with RGBA mode
@@ -57,10 +50,10 @@ class Credential:
 		font = ImageFont.truetype(style["font"], style["font_size"])
 
 		text_length = self.draw.textlength(text, font=font)
-
-		shadow_position = ((W-text_length)/2, style["upper_offset"] + 10)
 		name_position = ((W-text_length)/2, style["upper_offset"])
 
 		if "shadow" in style:
-			self.setShadow(text, shadow_position, style)
+			shadow_position = ((W-text_length)/2, style["upper_offset"] + 10)
+			self.shadow(text, shadow_position, style)
+
 		self.draw.text(name_position, text, fill=style["color"], font=font)
