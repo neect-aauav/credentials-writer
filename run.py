@@ -1,6 +1,6 @@
 import os
 import sys
-import credentials as credentials
+import credentials
 
 def load_plugin(plugin_name):
 	# check if plugin exists
@@ -27,7 +27,7 @@ def main():
 	args = sys.argv[1:]
 
 	# display help
-	if len(args) == 0 or (len(args) == 1 and (args[0].startswith("-") or args[0].startswith("--"))):
+	if len(args) <= 1 or (len(args) == 1 and (args[0].startswith("-") or args[0].startswith("--"))):
 		showHelp(sys.argv[0])	
 		return
 
@@ -48,7 +48,11 @@ def main():
 
 	# run plugin
 	plugin = load_plugin(plugin_name)
-	n_gen = plugin.run(credentials, file, type)
+	n_gen = plugin.run(
+		lambda: credentials.Credential(f"templates/enei/{type}.png"),
+		file,
+		type
+	)
 
 	# if n_gen exists, print how many credentials were generated
 	if n_gen:
