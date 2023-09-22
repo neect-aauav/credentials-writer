@@ -78,7 +78,12 @@ def main():
 		return
 
 	for name in getNames(file):
-		writeCredential(name.strip(), f"assets/credentials/{type}.png", f"credentials/{type}")
+		name = name.strip()
+
+		# handle names with more than two words
+		if len(name.split()) > 2:
+			name = name.split()[0] + " " + name.split()[-1]
+		writeCredential(name, f"assets/credentials/{type}.png", f"credentials/{type}")
 
 	print(f"Generated {len(getNames(file))} credentials for '{type}' in folder 'credentials/{type}/'")
 
