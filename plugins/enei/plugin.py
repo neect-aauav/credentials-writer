@@ -24,6 +24,13 @@ def getNames(file):
 	return names
 
 def run(new, file, tier):
+	# if tier is Participante, remove shadow
+	if tier == "participante":
+		del NAME_STYLE['shadow']
+		del TIER_STYLE['shadow']
+
+		TIER_STYLE["color"] = "#000000"
+
 	names = getNames(file)
 	for name in names:
 		name = name.upper().strip()
