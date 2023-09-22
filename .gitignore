@@ -1,2 +1,5 @@
 # python virtual env
 venv
+
+# credentials output folder
+/credentials

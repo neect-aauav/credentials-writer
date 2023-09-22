@@ -1,15 +1,11 @@
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
+import sys
+import os
 
-FONT = "assets/Panton-Black.ttf"
+FONT = "assets/fonts/Panton-Black.ttf"
 FONT_SIZE = 105
-CREDENTIAL = "credencial_empty.png"
 COLOR = "#f9a31c"
 UPPER_OFFSET = 875
-
-def getNames(file):
-	with open(file) as f:
-		names = f.readlines()
-	return names
 
 def setShadow(I, text, position, opacity):
 	font = ImageFont.truetype(FONT, FONT_SIZE)
@@ -25,8 +21,8 @@ def setShadow(I, text, position, opacity):
 	# Paste the shadow text onto the original image using alpha mask
 	I.paste(shadow_text_image, (0, 0), shadow_text_image)
 
-def writeCredential(name):
-	I=Image.open(CREDENTIAL)
+def writeCredential(name, credential, output_path):
+	I=Image.open(credential)
 	W, H = I.size
 	font = ImageFont.truetype(FONT, FONT_SIZE)
 
@@ -40,12 +36,51 @@ def writeCredential(name):
 	setShadow(I, name, shadow_position, 190)
 	draw.text(name_position, name, fill=COLOR, font=font)
 
-	I.save(name.lower().replace(" ", "_")+"-credential.png")
+	# check if output path exists
+	if not os.path.exists(output_path):
+		os.makedirs(output_path)
+
+	output = output_path+"/"+name.lower().replace(" ", "_")+"-credential.png"
+	I.save(output)
+
+def getNames(file):
+	with open(file) as f:
+		names = f.readlines()
+	return names
+
+def showHelp(program_name):
+	print(f"Usage: python3 {program_name} <type> [file]")
+	print("   type: \tthe type of credential, which matches the \n        \tcredential image name and the names file name \n        \t(default: participante)")
+	print("   file: \tpath to file with names (optional)")
 
 def main():
-	for name in getNames("names.txt"):
-		name = name.strip()
-		writeCredential(name)
+	args = sys.argv[1:]
+
+	# display help
+	if len(args) == 1 and (args[0].startswith("-") or args[0].startswith("--")):
+		showHelp(sys.argv[0])	
+		return
+
+	# handle arguments
+	type = "participante"
+	file = "names/participantes.txt"
+	if len(args) > 0:
+		type = args[0]
+		file = "names/"+type+".txt"
+		if len(args) == 2:
+			file = args[1]
+		
+	print(f"Generating credentials for '{type}' from file '{file}'...")
+
+	if not os.path.exists(file):
+		print(f"File '{file}' not found.\n")
+		showHelp(sys.argv[0])
+		return
+
+	for name in getNames(file):
+		writeCredential(name.strip(), f"assets/credentials/{type}.png", f"credentials/{type}")
+
+	print(f"Generated {len(getNames(file))} credentials for '{type}' in folder 'credentials/{type}/'")
 
 if __name__ == "__main__":
 	main()
