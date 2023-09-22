@@ -1,5 +1,6 @@
-# python virtual env
+# python
 venv
+__pycache__
 
 # credentials output folder
 /credentials
