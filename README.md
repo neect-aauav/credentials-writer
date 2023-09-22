@@ -43,7 +43,7 @@ Each text to be written need styling, so you have to create dicts with the style
 }
 ```
 
-⚠️ The path context inside the plugin file is the root of the project. For example, to reference the fonts folder, you would user `plugins/<plugin>/fonts/...  
+⚠️ The path context inside the plugin file is the root of the project. For example, to reference the fonts folder, you would use `plugins/<plugin>/fonts/...`  
 
 An example of a plugin file can be the following, with the only requirement being the `run()` function:
 
