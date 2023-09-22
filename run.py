@@ -17,9 +17,9 @@ def load_plugin(plugin_name):
 	return plugin
 
 def showHelp(program_name):
-	print(f"Usage: python3 {program_name} <plugin> <type> [file]")
+	print(f"Usage: python3 {program_name} <plugin> <tier> [file]")
 	print("   plugin: \tthe plugin to use from /plugins folder")
-	print("   type: \tthe type of credential, which matches the \n        \tcredential image name and the names file name")
+	print("   tier: \tthe tier of credential, which matches the \n        \tcredential image name and the names file name")
 	print("   file: \tpath to file with names (optional)")
 
 def main():
@@ -37,8 +37,8 @@ def main():
 			showHelp(sys.argv[0])
 			return
 
-		type = args[1]
-		file = f"plugins/{plugin_name}/names/{type}.txt"
+		tier = args[1]
+		file = f"plugins/{plugin_name}/names/{tier}.txt"
 		if len(args) == 3:
 			file = args[2]
 			
@@ -47,13 +47,13 @@ def main():
 			showHelp(sys.argv[0])
 			return
 
-		print(f"Generating credentials for '{type}' from file '{file}'...")
+		print(f"Generating credentials for '{tier}' from file '{file}'...")
 
 		# run plugin
 		n_gen = plugin.run(
-			lambda: credentials.Credential(f"plugins/{plugin_name}/templates/{type}.png"),
+			lambda: credentials.Credential(f"plugins/{plugin_name}/templates/{tier}.png"),
 			file,
-			type
+			tier
 		)
 
 		# if n_gen exists, print how many credentials were generated

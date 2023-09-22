@@ -23,7 +23,7 @@ def getNames(file):
 		names = f.readlines()
 	return names
 
-def run(new, file, type):
+def run(new, file, tier):
 	names = getNames(file)
 	for name in names:
 		name = name.upper().strip()
@@ -51,9 +51,9 @@ def run(new, file, type):
 		if name_length > w:
 			TIER_STYLE['upper_offset'] += 100
 
-		credential.write(type.upper(), TIER_STYLE) # write tier
+		credential.write(tier.upper(), TIER_STYLE) # write tier
 
-		output_path = f"credentials/enei/{type}"
+		output_path = f"credentials/enei/{tier}"
 		output = output_path+"/"+name.lower().replace(" ", "_")+"-credential.png"
 		credential.save(output)
 	
