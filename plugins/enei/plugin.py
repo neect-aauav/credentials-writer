@@ -32,6 +32,10 @@ def run(new, file, tier):
 		TIER_STYLE["color"] = "#000000"
 
 	names = getNames(file)
+
+	# set total credentials to be generated
+	new().set_total(len(names))
+
 	for name in names:
 		name = name.upper().strip()
 
@@ -44,7 +48,7 @@ def run(new, file, tier):
 		w, h = credential.size()
 
 		# WRITE NAME
-		name_length = credential.textLength(name, NAME_STYLE)
+		name_length = credential.text_length(name, NAME_STYLE)
 		# if name is too long, break it into two lines
 		if name_length > w:
 			slitted = name.split()

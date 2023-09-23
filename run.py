@@ -47,7 +47,10 @@ def main():
 			showHelp(sys.argv[0])
 			return
 
-		print(f"Generating credentials for '{tier}' from file '{file}'...")
+		print(f"Generating credentials...\nPlugin: {plugin_name}\nTier: '{tier}'\nFile: '{file}'")
+
+		# set total credentials to be generated
+		credentials.Credential.progress = 0
 
 		# run plugin
 		n_gen = plugin.run(

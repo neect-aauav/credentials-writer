@@ -67,6 +67,10 @@ def run(new, file, tier):
 	# maybe iterate over the names in the file
 	...
 
+	# set the total number of credentials to be generated (for progress printing purposes)
+	# here you can create a dummy instance of a credential just to set the total
+	new().set_total(...)
+
 	# create a new instance of a credential (maybe inside a loop)
 	credential = new()
 
@@ -85,9 +89,10 @@ The program provides a `Credential` class, which is a wrapper of several Pillow 
 An instance of this class is created with the `instanciator` function, which is passed as an argument to the `run()` function inside the plugin file (function `new()` in the example above).  
 The `Credential` class has the following class methods that you can use:
 - `save(path)`: saves the credential image to the path.
+- `set_total(total)`: sets the total number of credentials to be generated. This is used to calculate the progress of the program. (this is a class method that behaves like a static method)
 - `shadow(text, position, style)`: writes te text as a shadow. The position is a tuple with the x and y coordinates of the text.
 - `size()`: returns a typle with the width and height of the credential image.
-- `textLength(text, style)`: returns the length of the text in pixels.
+- `text_length(text, style)`: returns the length of the text in pixels.
 - `write(text, style)`: writes the text with the style provided. The position of the text is calculated automatically to be centered. If style has shadow, it will be written with a shadow.
 
 ## Usage

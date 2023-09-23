@@ -2,6 +2,9 @@ import os
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
 
 class Credential:
+	progress = 0
+	total = 0
+
 	def __init__(self, template):
 		if not template:
 			print("No template specified.")
@@ -27,7 +30,10 @@ class Credential:
 
 		self.image.save(path)
 
-	def textLength(self, text, style):
+		Credential.progress += 1
+		progress_bar(Credential.progress, Credential.total)
+
+	def text_length(self, text, style):
 		font = ImageFont.truetype(style["font"], style["font_size"])
 		return self.draw.textlength(text, font=font)
 
@@ -57,3 +63,12 @@ class Credential:
 			self.shadow(text, shadow_position, style)
 
 		self.draw.text(name_position, text, fill=style["color"], font=font)
+
+	def set_total(self, total):
+		Credential.total = total
+
+
+def progress_bar(progress, total):
+	print(f"\r[{'='*int(progress/total*50):50}] {progress}/{total} {int(progress/total*100)}%", end="")
+	if progress == total:
+		print("")
