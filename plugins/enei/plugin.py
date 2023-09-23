@@ -23,7 +23,9 @@ NAME_MARGIN = 100
 def getLines(file):
 	with open(file) as f:
 		lines = f.readlines()
-	return lines
+	
+	# ignore #coments and empty lines
+	return [line for line in lines if line[0] != "#" and line.strip() != ""]
 
 def compactName(name):
 	# handle names with more than two words
@@ -81,7 +83,7 @@ def empresaCredencial(new, file, tier):
 	empresa = ""
 	for line in lines:
 		if line[0] == "-":
-			empresa = line[1:].strip().upper()
+			empresa = line[1:].upper().strip()
 			continue
 
 		name = compactName(line).upper().strip()

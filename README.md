@@ -4,6 +4,13 @@ A simple python script to write centered text into credential templates.
 The script uses the [Pillow](https://pillow.readthedocs.io/en/stable/) library.  
 It uses an approach with plugins, so you can easily add your own templates, and write any text you want into them.
 
+## Table of contents
+
+- [Plugins](#plugins)
+  - [plugin.py](#pluginpy)
+- [Credential class](#credential-class)
+- [Usage](#usage)
+
 ## Plugins
 
 Plugins are located in the `/plugins` directory.  

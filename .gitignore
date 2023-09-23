@@ -3,4 +3,5 @@ venv
 __pycache__
 
 # credentials output folder
-/credentials
+credentials
+print
