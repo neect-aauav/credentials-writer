@@ -1,14 +1,15 @@
 # credentials-writer
 
 A simple python script to write centered text into credential templates.  
-The script uses the [Pillow](https://pillow.readthedocs.io/en/stable/) library.  
+The script uses the [Pillow](https://pillow.readthedocs.io/en/stable/) library to generate the text for the credentials and the [ReportLab](https://docs.reportlab.com/reportlab/userguide/ch1_intro/) library to generate the PDFs for printing.  
 It uses an approach with plugins, so you can easily add your own templates, and write any text you want into them.
 
 ## Table of contents
 
 - [Plugins](#plugins)
   - [plugin.py](#pluginpy)
-- [Credential class](#credential-class)
+- [Credential instance](#credential-instance)
+- [PDF for printing](#pdf-for-printing)
 - [Usage](#usage)
 
 ## Plugins
@@ -19,12 +20,14 @@ You must provide a plugin to run the program. The folder of the plugin must have
 ```
 <plugin_name>
 ├── /templates
+│   ├── front
+│   └── back
 ├── /fonts
 ├── /names
 └── plugin.py
 ```
 
-Every plugin must have a `/templates` folder, which contains the image templates of the credentials, without any of the text you want to generate. A `/fonts` folder, which contains the fonts you want to use. And a `/names` folder, which contains the names you want to generate.  
+Every plugin must have a `/templates` folder, which contains the image templates of the credentials for both the `/front` and `/back`, without any of the text you want to generate. A `/fonts` folder, which contains the fonts you want to use. And a `/names` folder, which contains the names you want to generate.  
 The program has a Tier approach (for example Staff, Participant, etc.), so each **template** and **names** file must be named according to the Tier they belong to. For the Staff, you would have staff.png and staff.txt.  
 The **fonts** folder must contain all the fonts you want to use inside the plugin. The fonts must be in `.ttf` format.  
 The **plugin.py** file must have the code and the logic of what you want to write.
@@ -87,7 +90,7 @@ def run(new, file, tier):
 	...
 ```
 
-## Credential class
+## Credential instance
 
 The program provides a `Credential` class, which is a wrapper of several Pillow functions that are convenient to this use case.  
 An instance of this class is created with the `instanciator` function, which is passed as an argument to the `run()` function inside the plugin file (function `new()` in the example above).  
@@ -98,6 +101,11 @@ The `Credential` class has the following class methods that you can use:
 - `size()`: returns a typle with the width and height of the credential image.
 - `text_length(text, style)`: returns the length of the text in pixels.
 - `write(text, style)`: writes the text with the style provided. The position of the text is calculated automatically to be centered. If style has shadow, it will be written with a shadow.
+
+## PDF for printing
+
+The program allows for the generation of PDFs for printing, for both the front and back of the credential.  
+Right now, only printing 4xA6 in a A4 page is supported.
 
 ## Usage
 

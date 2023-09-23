@@ -1,6 +1,7 @@
 import os
 import sys
 import credentials
+import math
 from print import print_a6_in_a4
 
 def load_plugin(plugin_name):
@@ -25,7 +26,7 @@ def showHelp(program_name):
 
 def progress_bar(progress, total):
 	print(f"\r[{'='*int(progress/total*50):50}] {progress}/{total} {int(progress/total*100)}%", end="")
-	if progress == total:
+	if progress >= total:
 		print("")
 
 def main():
@@ -60,7 +61,7 @@ def main():
 
 		# run plugin
 		plugin.run(
-			lambda: credentials.Credential(f"plugins/{plugin_name}/templates/{tier}.png"),
+			lambda: credentials.Credential(f"plugins/{plugin_name}/templates/front/{tier}.png"),
 			file,
 			tier
 		)
@@ -73,7 +74,7 @@ def main():
 
 		# generate print pdfs
 		images = [f"credentials/{plugin_name}/{tier}/{file}" for file in os.listdir(f"credentials/{plugin_name}/{tier}") if file.endswith(".png")]
-		prints = len(images)//4
+		prints = math.ceil(len(images)/4)
 		print(f"Generating print PDF files...")
 
 		# create folder print if it doesn't exist
@@ -81,7 +82,8 @@ def main():
 			os.makedirs(f"print/{plugin_name}/{tier}")
 
 		for i in range(0, len(images), 4):
-			print_a6_in_a4(images[i:i+4], f"{plugin_name}/{tier}/{plugin_name}_{tier}_print{i//4}.pdf")
+			print_a6_in_a4(images[i:i+4], f"{plugin_name}/{tier}/{plugin_name}_{tier}_print{i//4}.pdf") # front of print
+			print_a6_in_a4([f"plugins/{plugin_name}/templates/back/{tier}.png"]*4, f"{plugin_name}/{tier}/{plugin_name}_{tier}_print{i//4}_back.pdf") # back of print
 			progress_bar((i+4)//4, prints)
 
 		print(f"Generated {prints} print PDF files.\n")
