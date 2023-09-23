@@ -47,21 +47,21 @@ def main():
 			showHelp(sys.argv[0])
 			return
 
-		print(f"Generating credentials...\nPlugin: {plugin_name}\nTier: '{tier}'\nFile: '{file}'")
+		print(f"Plugin: {plugin_name}\nTier: '{tier}'\nFile: '{file}'\nGenerating credentials...")
 
 		# set total credentials to be generated
 		credentials.Credential.progress = 0
 
 		# run plugin
-		n_gen = plugin.run(
+		plugin.run(
 			lambda: credentials.Credential(f"plugins/{plugin_name}/templates/{tier}.png"),
 			file,
 			tier
 		)
 
 		# if n_gen exists, print how many credentials were generated
-		if n_gen:
-			print(f"Generated {n_gen} credentials.")
+		if credentials.Credential.progress > 0:
+			print(f"Generated {credentials.Credential.progress} credentials.")
 
 if __name__ == "__main__":
 	main()

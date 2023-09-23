@@ -31,7 +31,8 @@ class Credential:
 		self.image.save(path)
 
 		Credential.progress += 1
-		progress_bar(Credential.progress, Credential.total)
+		if Credential.total > 0:
+			progress_bar(Credential.progress, Credential.total)
 
 	def text_length(self, text, style):
 		font = ImageFont.truetype(style["font"], style["font_size"])

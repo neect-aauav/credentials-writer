@@ -18,54 +18,85 @@ TIER_STYLE = {
 	}
 }
 
-def getNames(file):
+NAME_MARGIN = 100
+
+def getLines(file):
 	with open(file) as f:
-		names = f.readlines()
-	return names
+		lines = f.readlines()
+	return lines
 
-def run(new, file, tier):
-	# if tier is Participante, remove shadow
-	if tier == "participante":
-		del NAME_STYLE['shadow']
-		del TIER_STYLE['shadow']
+def compactName(name):
+	# handle names with more than two words
+	if len(name.split()) > 2:
+		name = name.split()[0] + " " + name.split()[-1]
+	return name
 
-		TIER_STYLE["color"] = "#000000"
+def saveCredential(credential, file_name):
+	output_path = "credentials/enei"
+	output = f"{output_path}/{file_name}.png"
+	credential.save(output)
 
-	names = getNames(file)
+def writeCredential(credential, name, title):
+	w, h = credential.size()
+
+	# WRITE NAME
+	name_length = credential.text_length(name, NAME_STYLE)
+	name_style = NAME_STYLE.copy()
+	title_style = TIER_STYLE.copy()
+	# if name is too long, break it into two lines
+	long_name = name_length > w-NAME_MARGIN*2
+	if long_name:
+		splitted = name.split()
+		
+		credential.write(splitted[0], name_style) # write first name
+		name_style['upper_offset'] += 100
+		credential.write(splitted[1], name_style) # write second name
+
+		title_style['upper_offset'] += 100
+	else:
+		credential.write(name, name_style) # write name
+
+	# WRITE TITLE
+	credential.write(title, title_style) # write tier
+
+	return credential
+
+def regularCredential(new, file, tier):
+	names = getLines(file)
 
 	# set total credentials to be generated
 	new().set_total(len(names))
 
 	for name in names:
-		name = name.upper().strip()
+		name = compactName(name).upper().strip()
+		credential = writeCredential(new(), name, tier.upper())
+		saveCredential(credential, f"{tier}/{name.lower().replace(' ', '_')}-credential")
 
-		# handle names with more than two words
-		if len(name.split()) > 2:
-			name = name.split()[0] + " " + name.split()[-1]
+def empresaCredencial(new, file, tier):
+	lines = getLines(file)
 
-		# instantiate new credential
-		credential = new()
-		w, h = credential.size()
+	# count number of credentials to be generated
+	new().set_total(len([line for line in lines if line[0] != "-"]))
 
-		# WRITE NAME
-		name_length = credential.text_length(name, NAME_STYLE)
-		# if name is too long, break it into two lines
-		if name_length > w:
-			slitted = name.split()
-			credential.write(slitted[0], NAME_STYLE) # write first name
-			NAME_STYLE['upper_offset'] += 100
-			credential.write(slitted[1], NAME_STYLE) # write second name
-		else:
-			credential.write(name, NAME_STYLE) # write name
+	empresa = ""
+	for line in lines:
+		if line[0] == "-":
+			empresa = line[1:].strip().upper()
+			continue
 
-		# WRITE TIER
-		if name_length > w:
-			TIER_STYLE['upper_offset'] += 100
+		name = compactName(line).upper().strip()
+		credential = writeCredential(new(), name, empresa)
+		saveCredential(credential, f"{tier}/{empresa.lower().replace(' ', '_')}-{name.lower().replace(' ', '_')}-credential")
 
-		credential.write(tier.upper(), TIER_STYLE) # write tier
+def run(new, file, tier):
+	if tier != "empresa":
+		if tier == "participante":
+			del NAME_STYLE['shadow']
+			del TIER_STYLE['shadow']
 
-		output_path = f"credentials/enei/{tier}"
-		output = output_path+"/"+name.lower().replace(" ", "_")+"-credential.png"
-		credential.save(output)
+			TIER_STYLE["color"] = "#000000"
+
+		regularCredential(new, file, tier)
 	
-	return len(names)
+	else:
+		empresaCredencial(new, file, tier)

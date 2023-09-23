@@ -78,9 +78,6 @@ def run(new, file, tier):
 	credential.write(text, NAME_STYLE)
 	credential.save(...)
 	...
-
-	# return the number of credentials generated if you want it to be displayed
-	return ...
 ```
 
 ## Credential class
