@@ -6,7 +6,6 @@ import os
 
 A4_WIDTH, A4_HEIGHT = A4
 
-
 def merge_a4(files, output):
 	merger = PdfMerger()
 	for file in files:

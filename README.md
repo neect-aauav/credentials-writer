@@ -1,9 +1,10 @@
 # credentials-writer
 
-A simple python script to write centered text into credential templates.  
+A small python program to write centered text into credential templates.  
 The script uses the following external libraries:
 - [Pillow](https://pillow.readthedocs.io/en/stable/), to generate the text for the credentials
 - [ReportLab](https://docs.reportlab.com/reportlab/userguide/ch1_intro/), to generate the PDFs for printing.
+- [PyPDF2](https://pypdf2.readthedocs.io/en/latest/), to merge the PDFs for printing.
 
 It uses an approach with plugins, so you can easily add your own templates, and write any text you want into them.
 
@@ -129,12 +130,11 @@ $ pip install -r requirements.txt
 3. Run the program:
 
 ```bash
-$ python3 run.py <plugin> <tier> [file]
+$ python3 run.py <plugin> <tier>
 
    plugin: 	the plugin to use from /plugins folder
    tier: 	the tier of credential, which matches the 
         	credential image name and the names file name
-   file: 	path to file with names (optional)
 ```
 
 Plugin and tier arguments are mandatory. If you don't provide a file, the program will use the file with the same name as the tier.

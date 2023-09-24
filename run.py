@@ -19,10 +19,9 @@ def load_plugin(plugin_name):
 	return plugin
 
 def showHelp(program_name):
-	print(f"Usage: python3 {program_name} <plugin> <tier> [file]")
+	print(f"Usage: python3 {program_name} <plugin> <tier>")
 	print("   plugin: \tthe plugin to use from /plugins folder")
 	print("   tier: \tthe tier of credential, which matches the \n        \tcredential image name and the names file name")
-	print("   file: \tpath to file with names (optional)")
 
 def progress_bar(progress, total):
 	print(f"\r[{'='*int(progress/total*50):50}] {progress}/{total} {int(progress/total*100)}%", end="")
@@ -127,7 +126,7 @@ def main():
 			progress += 3
 
 		# merge all prints
-		merge_a4(saved_pdfs, f"{path}/{plugin_name}_{tier}_merged.pdf")
+		merge_a4([pdf for pdf in saved_pdfs if "merged" not in pdf], f"{path}/{plugin_name}_{tier}_merged.pdf")
 		saved_pdfs.append(f"{print_path}/{plugin_name}_{tier}_merged.pdf")
 		progress+=1
 		progress_bar(progress, prints)
