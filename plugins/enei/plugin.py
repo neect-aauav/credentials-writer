@@ -69,10 +69,10 @@ def regularCredential(new, file, tier):
 	# set total credentials to be generated
 	new().set_total(len(names))
 
-	for name in names:
+	for i, name in enumerate(names):
 		name = compactName(name).upper().strip()
 		credential = writeCredential(new(), name, tier.upper())
-		saveCredential(credential, f"{tier}/{name.lower().replace(' ', '_')}-credential")
+		saveCredential(credential, f"{tier}/{name.lower().replace(' ', '_')}-credential-{i}")
 
 def empresaCredencial(new, file, tier):
 	lines = getLines(file)
@@ -81,14 +81,14 @@ def empresaCredencial(new, file, tier):
 	new().set_total(len([line for line in lines if line[0] != "-"]))
 
 	empresa = ""
-	for line in lines:
+	for i, line in enumerate(lines):
 		if line[0] == "-":
 			empresa = line[1:].upper().strip()
 			continue
 
 		name = compactName(line).upper().strip()
 		credential = writeCredential(new(), name, empresa)
-		saveCredential(credential, f"{tier}/{empresa.lower().replace(' ', '_')}-{name.lower().replace(' ', '_')}-credential")
+		saveCredential(credential, f"{tier}/{empresa.lower().replace(' ', '_')}-{name.lower().replace(' ', '_')}-credential-{i}")
 
 def run(new, file, tier):
 	if tier != "empresa":

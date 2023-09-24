@@ -58,7 +58,7 @@ def main():
 
 		# set total credentials to be generated
 		credentials.Credential.progress = 0
-
+		
 		# run plugin
 		plugin.run(
 			lambda: credentials.Credential(f"plugins/{plugin_name}/templates/front/{tier}.png"),
@@ -81,6 +81,7 @@ def main():
 		if not os.path.exists(f"print/{plugin_name}/{tier}"):
 			os.makedirs(f"print/{plugin_name}/{tier}")
 
+		progress_bar(0, prints)
 		for i in range(0, len(images), 4):
 			print_a6_in_a4(images[i:i+4], f"{plugin_name}/{tier}/{plugin_name}_{tier}_print{i//4}.pdf") # front of print
 			print_a6_in_a4([f"plugins/{plugin_name}/templates/back/{tier}.png"]*4, f"{plugin_name}/{tier}/{plugin_name}_{tier}_print{i//4}_back.pdf") # back of print
