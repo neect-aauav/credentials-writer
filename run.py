@@ -1,8 +1,8 @@
 import os
 import sys
-import credentials
 import math
-from print import print_a6_in_a4
+import lib.credentials as credentials
+from lib.print import print_a6_in_a4
 
 def load_plugin(plugin_name):
 	# check if plugin exists

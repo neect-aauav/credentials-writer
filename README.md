@@ -1,7 +1,10 @@
 # credentials-writer
 
 A simple python script to write centered text into credential templates.  
-The script uses the [Pillow](https://pillow.readthedocs.io/en/stable/) library to generate the text for the credentials and the [ReportLab](https://docs.reportlab.com/reportlab/userguide/ch1_intro/) library to generate the PDFs for printing.  
+The script uses the following external libraries:
+- [Pillow](https://pillow.readthedocs.io/en/stable/), to generate the text for the credentials
+- [ReportLab](https://docs.reportlab.com/reportlab/userguide/ch1_intro/), to generate the PDFs for printing.
+
 It uses an approach with plugins, so you can easily add your own templates, and write any text you want into them.
 
 ## Table of contents
