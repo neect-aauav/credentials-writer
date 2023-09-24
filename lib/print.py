@@ -26,13 +26,14 @@ def print_a6_in_a4(images, output):
 	margin = 10
 	image_width = (A4_WIDTH - 3 * margin) / 2
 	image_height = (A4_HEIGHT - 2 * margin) / 2
+	central_margin = 6
 
 	# Loop through the image files and add them to the A4 canvas
 	for i, image_file in enumerate(images):
 		if i % 2 == 0:
 			x = margin
 		else:
-			x = margin + image_width
+			x = margin + image_width + central_margin
 		if i < 2:
 			y = A4_HEIGHT - margin - image_height
 		else:

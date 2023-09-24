@@ -20,13 +20,6 @@ TIER_STYLE = {
 
 NAME_MARGIN = 100
 
-def getLines(file):
-	with open(file) as f:
-		lines = f.readlines()
-	
-	# ignore #coments and empty lines
-	return [line for line in lines if line[0] != "#" and line.strip() != ""]
-
 def compactName(name):
 	# handle names with more than two words
 	if len(name.split()) > 2:
@@ -58,9 +51,7 @@ def writeCredential(credential, name, title):
 
 	return credential
 
-def regularCredential(new, file, tier):
-	names = getLines(file)
-
+def regularCredential(new, names, tier):
 	# set total credentials to be generated
 	new().set_total(len(names))
 
@@ -69,9 +60,7 @@ def regularCredential(new, file, tier):
 		credential = writeCredential(new(), name, tier.upper())
 		credential.save(f"{name.lower().replace(' ', '_')}-credential-{i}")
 
-def empresaCredencial(new, file, tier):
-	lines = getLines(file)
-
+def empresaCredencial(new, lines):
 	# count number of credentials to be generated
 	new().set_total(len([line for line in lines if line[0] != "-"]))
 
@@ -85,7 +74,7 @@ def empresaCredencial(new, file, tier):
 		credential = writeCredential(new(), name, empresa)
 		credential.save(f"{empresa.lower().replace(' ', '_')}-{name.lower().replace(' ', '_')}-credential-{i}")
 
-def run(new, file, tier):
+def run(new, names, tier, file):
 	if tier != "empresa":
 		if tier == "participante":
 			del NAME_STYLE['shadow']
@@ -93,7 +82,7 @@ def run(new, file, tier):
 
 			TIER_STYLE["color"] = "#000000"
 
-		regularCredential(new, file, tier)
+		regularCredential(new, names, tier)
 	
 	else:
-		empresaCredencial(new, file, tier)
+		empresaCredencial(new, names)

@@ -40,8 +40,9 @@ The **plugin.py** file must have the code and the logic of what you want to writ
 
 The plugin file must have the function `run()`, which will be called by the program. This function is called with 3 arguments:
 - `instanciator`: function that creates a new instance of a credential
-- `file`: the file with the list of names from a tier
+- `names`: the list of names to be written in the credential
 - `tier`: the tier of the credential
+- `file`: the file with the list of names from a tier
 
 Each text to be written need styling, so you have to create dicts with the styles you want to use. The dicts should have the following structure:
 
@@ -77,8 +78,8 @@ def aux_function():
 ...
 
 # the function that will be called by the program
-def run(new, file, tier):
-	# maybe iterate over the names in the file
+def run(new, names, tier, file):
+	# maybe iterate over the names or get the lines from the file
 	...
 
 	# set the total number of credentials to be generated (for progress printing purposes)

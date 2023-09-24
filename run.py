@@ -35,6 +35,13 @@ def getSize(paths):
 
 	return size/1024/1024 # convert to MB
 
+def getLines(file):
+	with open(file) as f:
+		lines = f.readlines()
+	
+	# ignore #coments and empty lines
+	return [line for line in lines if line[0] != "#" and line.strip() != ""]
+
 def main():
 	args = sys.argv[1:]
 
@@ -52,8 +59,6 @@ def main():
 
 		tier = args[1]
 		file = f"plugins/{plugin_name}/names/{tier}.txt"
-		if len(args) == 3:
-			file = args[2]
 
 		credentials.Credential.plugin = plugin_name
 		credentials.Credential.tier = tier
@@ -77,8 +82,9 @@ def main():
 		# run plugin
 		plugin.run(
 			lambda: credentials.Credential(f"plugins/{plugin_name}/templates/front/{tier}.png"),
+			getLines(file),
+			tier,
 			file,
-			tier
 		)
 
 		# if n_gen exists, print how many credentials were generated
