@@ -2,7 +2,7 @@ import os
 import sys
 import math
 import lib.credentials as credentials
-from lib.print import print_a6_in_a4
+from lib.print import print_a6_in_a4, merge_a4
 
 def load_plugin(plugin_name):
 	# check if plugin exists
@@ -91,23 +91,46 @@ def main():
 
 		# generate print pdfs
 		images = [credentials for credentials in credentials.Credential.saved]
-		prints = math.ceil(len(images)/4)
-		print(f"Generating print PDF files...")
+		prints = math.ceil(len(images)/4)*3+1 # front, back, merge per credential and merge all
+		print(f"Pages: [front, back, merge, merge all]\nGenerating print PDF files...")
 
 		# create folders for print if they don't exist
-		print_path = f"print/{plugin_name}/{tier}"
+		path = f"{plugin_name}/{tier}"
+		print_path = f"print/{path}"
 		if not os.path.exists(print_path):
 			os.makedirs(print_path)
 
 		saved_pdfs = []
+		progress = 0
 		progress_bar(0, prints)
 		for i in range(0, len(images), 4):
-			print_a6_in_a4(images[i:i+4], f"{plugin_name}/{tier}/{plugin_name}_{tier}_print{i//4}.pdf") # front of print
-			saved_pdfs.append(f"{print_path}/{plugin_name}_{tier}_print{i//4}.pdf")
-			print_a6_in_a4([f"plugins/{plugin_name}/templates/back/{tier}.png"]*4, f"{plugin_name}/{tier}/{plugin_name}_{tier}_print{i//4}_back.pdf") # back of print
-			saved_pdfs.append(f"{print_path}/{plugin_name}_{tier}_print{i//4}_back.pdf")
+			index = i//4
 
-			progress_bar((i+4)//4, prints)
+			# front
+			front = f"{plugin_name}_{tier}_print{index}_front.pdf"
+			print_a6_in_a4(images[i:i+4], f"{path}/{front}")
+			saved_pdfs.append(f"{print_path}/{front}")
+			progress_bar(progress+1, prints)
+
+			# back
+			back = f"{plugin_name}_{tier}_print{index}_back.pdf"
+			print_a6_in_a4([f"plugins/{plugin_name}/templates/back/{tier}.png"]*4, f"{path}/{back}")
+			saved_pdfs.append(f"{print_path}/{back}")
+			progress_bar(progress+2, prints)
+
+			# merge front and back
+			merge = f"{plugin_name}_{tier}_print{index}_merged.pdf"
+			merge_a4([f"{print_path}/{front}", f"{print_path}/{back}"], f"{path}/{merge}")
+			saved_pdfs.append(f"{print_path}/{merge}")
+			progress_bar(progress+3, prints)
+
+			progress += 3
+
+		# merge all prints
+		merge_a4(saved_pdfs, f"{path}/{plugin_name}_{tier}_merged.pdf")
+		saved_pdfs.append(f"{print_path}/{plugin_name}_{tier}_merged.pdf")
+		progress+=1
+		progress_bar(progress, prints)
 
 		print("Generated print PDF files\n")
 		print(f"Saved:    {prints}\nFolder:   {print_path}\nSize:     {getSize(saved_pdfs):.2f} MB\n")

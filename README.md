@@ -97,6 +97,7 @@ def run(new, file, tier):
 
 The program provides a `Credential` class, which is a wrapper of several Pillow functions that are convenient to this use case.  
 An instance of this class is created with the `instanciator` function, which is passed as an argument to the `run()` function inside the plugin file (function `new()` in the example above).  
+The credentials are always saved to the `/credentials/<plugin>/<tier>` folder.  
 The `Credential` class has the following class methods that you can use:
 - `save(filename)`: saves the credential image to credentials folder with the name provided.
 - `set_total(total)`: sets the total number of credentials to be generated. This is used to calculate the progress of the program. (this is a class method that behaves like a static method)
@@ -108,14 +109,20 @@ The `Credential` class has the following class methods that you can use:
 ## PDF for printing
 
 The program allows for the generation of PDFs for printing, for both the front and back of the credential.  
-Right now, only printing 4xA6 in a A4 page is supported.
+The PDF files are always saved to the `/print/<plugin>/<tier>` folder.  
+For each credential, three PDFs are generated:
+- `<plugin>_<tier>_print<i>_front.pdf`: the front of the credential
+- `<plugin>_<tier>_print<i>_back.pdf`: the back of the credential
+- `<plugin>_<tier>_print<i>_merged.pdf`: both the front and back of the credential in the same file
+
+After all credentials PDF files are generated, the program will generate a PDF file with all the credentials (front and back) in the same file, `<plugin>_<tier>_merged.pdf`.  
 
 ## Usage
 
 1. Install the requirements:
 
 ```bash
-$ pip3 install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 2. Add your plugin to the `/plugins` folder
 

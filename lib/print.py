@@ -1,9 +1,19 @@
 from reportlab.lib.pagesizes import A4, portrait
 from reportlab.pdfgen import canvas
 from PIL import Image
+from PyPDF2 import PdfMerger
 import os
 
 A4_WIDTH, A4_HEIGHT = A4
+
+
+def merge_a4(files, output):
+	merger = PdfMerger()
+	for file in files:
+		merger.append(file)
+
+	merger.write(f"print/{output}")
+	merger.close()
 
 def print_a6_in_a4(images, output):
 	# create folder print if it doesn't exist
