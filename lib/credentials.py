@@ -4,6 +4,9 @@ from PIL import Image, ImageFont, ImageDraw, ImageFilter
 class Credential:
 	progress = 0
 	total = 0
+	plugin = None
+	tier = None
+	saved = []
 
 	def __init__(self, template):
 		if not template:
@@ -24,11 +27,13 @@ class Credential:
 
 		return Image.open(path)
 
-	def save(self, path):
+	def save(self, filename):
+		path = f"credentials/{Credential.plugin}/{Credential.tier}"
 		if not os.path.exists(os.path.dirname(path)):
 			os.makedirs(os.path.dirname(path))
 
-		self.image.save(path)
+		self.image.save(f"{path}/{filename}.png")
+		Credential.saved.append(f"{path}/{filename}.png")
 
 		Credential.progress += 1
 		if Credential.total > 0:

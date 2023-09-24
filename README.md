@@ -98,7 +98,7 @@ def run(new, file, tier):
 The program provides a `Credential` class, which is a wrapper of several Pillow functions that are convenient to this use case.  
 An instance of this class is created with the `instanciator` function, which is passed as an argument to the `run()` function inside the plugin file (function `new()` in the example above).  
 The `Credential` class has the following class methods that you can use:
-- `save(path)`: saves the credential image to the path.
+- `save(filename)`: saves the credential image to credentials folder with the name provided.
 - `set_total(total)`: sets the total number of credentials to be generated. This is used to calculate the progress of the program. (this is a class method that behaves like a static method)
 - `shadow(text, position, style)`: writes te text as a shadow. The position is a tuple with the x and y coordinates of the text.
 - `size()`: returns a typle with the width and height of the credential image.

@@ -29,6 +29,13 @@ def progress_bar(progress, total):
 	if progress >= total:
 		print("")
 
+def getSize(paths):
+	size = 0
+	for path in paths:
+		size += os.path.getsize(path)
+
+	return size/1024/1024 # convert to MB
+
 def main():
 	args = sys.argv[1:]
 
@@ -48,14 +55,23 @@ def main():
 		file = f"plugins/{plugin_name}/names/{tier}.txt"
 		if len(args) == 3:
 			file = args[2]
+
+		credentials.Credential.plugin = plugin_name
+		credentials.Credential.tier = tier
 			
 		if not os.path.exists(file):
 			print(f"File '{file}' not found.\n")
 			showHelp(sys.argv[0])
 			return
 
-		print(f"Plugin: {plugin_name}\nTier: '{tier}'\nFile: '{file}'\nGenerating credentials...")
+		credentials_path = f"credentials/{plugin_name}/{tier}"
+		# create folders for credentials if they don't exist
+		if not os.path.exists(credentials_path):
+			os.makedirs(credentials_path)
 
+		print(f"Plugin:   {plugin_name}\nTier:     {tier}\nNames:    {file}")
+
+		print("\nGenerating credentials...")
 		# set total credentials to be generated
 		credentials.Credential.progress = 0
 		
@@ -68,27 +84,34 @@ def main():
 
 		# if n_gen exists, print how many credentials were generated
 		if credentials.Credential.progress > 0:
-			print(f"Generated {credentials.Credential.progress} credentials.")
+			print("Generated credentials\n")
+			print(f"Saved:    {credentials.Credential.progress}\nFolder:   {credentials_path}\nSize:     {getSize(credentials.Credential.saved):.2f} MB\n")
 
-		print("\n")
+		print("")
 
 		# generate print pdfs
-		images = [f"credentials/{plugin_name}/{tier}/{file}" for file in os.listdir(f"credentials/{plugin_name}/{tier}") if file.endswith(".png")]
+		images = [credentials for credentials in credentials.Credential.saved]
 		prints = math.ceil(len(images)/4)
 		print(f"Generating print PDF files...")
 
-		# create folder print if it doesn't exist
-		if not os.path.exists(f"print/{plugin_name}/{tier}"):
-			os.makedirs(f"print/{plugin_name}/{tier}")
+		# create folders for print if they don't exist
+		print_path = f"print/{plugin_name}/{tier}"
+		if not os.path.exists(print_path):
+			os.makedirs(print_path)
 
+		saved_pdfs = []
 		progress_bar(0, prints)
 		for i in range(0, len(images), 4):
 			print_a6_in_a4(images[i:i+4], f"{plugin_name}/{tier}/{plugin_name}_{tier}_print{i//4}.pdf") # front of print
+			saved_pdfs.append(f"{print_path}/{plugin_name}_{tier}_print{i//4}.pdf")
 			print_a6_in_a4([f"plugins/{plugin_name}/templates/back/{tier}.png"]*4, f"{plugin_name}/{tier}/{plugin_name}_{tier}_print{i//4}_back.pdf") # back of print
+			saved_pdfs.append(f"{print_path}/{plugin_name}_{tier}_print{i//4}_back.pdf")
+
 			progress_bar((i+4)//4, prints)
 
-		print(f"Generated {prints} print PDF files.\n")
-		print("Done.")
+		print("Generated print PDF files\n")
+		print(f"Saved:    {prints}\nFolder:   {print_path}\nSize:     {getSize(saved_pdfs):.2f} MB\n")
+		print("\nDone.")
 
 if __name__ == "__main__":
 	main()

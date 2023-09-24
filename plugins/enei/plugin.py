@@ -33,11 +33,6 @@ def compactName(name):
 		name = name.split()[0] + " " + name.split()[-1]
 	return name
 
-def saveCredential(credential, file_name):
-	output_path = "credentials/enei"
-	output = f"{output_path}/{file_name}.png"
-	credential.save(output)
-
 def writeCredential(credential, name, title):
 	w, h = credential.size()
 
@@ -72,7 +67,7 @@ def regularCredential(new, file, tier):
 	for i, name in enumerate(names):
 		name = compactName(name).upper().strip()
 		credential = writeCredential(new(), name, tier.upper())
-		saveCredential(credential, f"{tier}/{name.lower().replace(' ', '_')}-credential-{i}")
+		credential.save(f"{name.lower().replace(' ', '_')}-credential-{i}")
 
 def empresaCredencial(new, file, tier):
 	lines = getLines(file)
@@ -88,7 +83,7 @@ def empresaCredencial(new, file, tier):
 
 		name = compactName(line).upper().strip()
 		credential = writeCredential(new(), name, empresa)
-		saveCredential(credential, f"{tier}/{empresa.lower().replace(' ', '_')}-{name.lower().replace(' ', '_')}-credential-{i}")
+		credential.save(f"{empresa.lower().replace(' ', '_')}-{name.lower().replace(' ', '_')}-credential-{i}")
 
 def run(new, file, tier):
 	if tier != "empresa":
