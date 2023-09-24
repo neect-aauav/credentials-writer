@@ -15,6 +15,7 @@ It uses an approach with plugins, so you can easily add your own templates, and 
 - [Credential instance](#credential-instance)
 - [PDF for printing](#pdf-for-printing)
 - [Usage](#usage)
+- [Example](#example)
 
 ## Plugins
 
@@ -139,3 +140,53 @@ $ python3 run.py <plugin> <tier>
 ```
 
 Plugin and tier arguments are mandatory. If you don't provide a file, the program will use the file with the same name as the tier.
+
+## Example
+
+In the plugins folder, there is an [example plugin](plugins/example), with all the files needed to run the program and generate credentials.  
+The example plugin.py file has the following code:
+
+```python
+NAME_STYLE = {
+	'font_size': 105,
+	'font': "plugins/example/fonts/Panton-Black.ttf",
+	'color': "#ffffff",
+	'upper_offset': 400,
+	'shadow': {
+		'opacity': 190
+	}
+}
+
+TIER_STYLE = {
+	'font_size': 85,
+	'font': "plugins/example/fonts/Montserrat-Regular.ttf",
+	'color': "#ffffff",
+	'upper_offset': 600,
+}
+
+
+def run(new, names, tier, file):
+	# set total credentials to be generated
+	new().set_total(len(names))
+
+	# change the style of the name depending on the tier
+	if tier == "staff":
+		NAME_STYLE['color'] = "#343deb"
+
+	# iterate over the names and generate credentials
+	for i, name in enumerate(names):
+		name = name.upper().strip()
+		
+		credential = new()
+		credential.write(name, NAME_STYLE) # write the name
+		credential.write(tier, TIER_STYLE) # write the tier
+		credential.save(f"{name.lower().replace(' ', '_')}-credential-{i}")
+```
+
+In the code above, I defined the styles for the two types of text I wanted to write, and created a simple run function that iterates over the names and generates a credential for each name. Remember that the `run()` function is mandatory, since it is the function that will be called by the program.  
+To run the example plugin, you would do the following [(after installing the requirements)](#usage):
+
+```bash
+$ python3 run.py example staff
+$ python3 run.py example general
+```
