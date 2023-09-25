@@ -51,6 +51,14 @@ def writeCredential(credential, name, title):
 
 	return credential
 
+def onlyTierCredential(new, tier, times):
+	# set total credentials to be generated
+	new().set_total(times)
+
+	for i in range(times):
+		credential = writeCredential(new(), "", tier.upper())
+		credential.save(f"{tier.lower().replace(' ', '_')}-credential-{i}")
+
 def regularCredential(new, names, tier):
 	# set total credentials to be generated
 	new().set_total(len(names))
@@ -75,6 +83,11 @@ def empresaCredencial(new, lines):
 		credential.save(f"{empresa.lower().replace(' ', '_')}-{name.lower().replace(' ', '_')}-credential-{i}")
 
 def run(new, names, tier, file):
+	if names[0].startswith("type=") and 'generic' in names[0].replace("type=", ""):
+		times = int(names[1].replace("times=", ""))
+		onlyTierCredential(new, tier, times)
+		return
+
 	if tier != "empresa":
 		if tier == "participante":
 			del NAME_STYLE['shadow']
